@@ -36,6 +36,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'user',
 )
 
@@ -118,3 +119,6 @@ SESSION_REDIS_PORT = 6379
 SESSION_REDIS_DB = 1
 SESSION_REDIS_PASSWORD = ''
 SESSION_REDIS_PREFIX = 'session'
+
+# 配置django认证系统使用的模型类
+AUTH_USER_MODEL = 'user.User'
