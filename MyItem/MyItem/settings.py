@@ -122,3 +122,11 @@ SESSION_REDIS_PREFIX = 'session'
 
 # 配置django认证系统使用的模型类
 AUTH_USER_MODEL = 'user.User'
+
+# 配置发送邮件
+EMAIL_BACKEND  = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.126.com'    # SMTP服务器
+EMAIL_POST = 25     # 端口号
+EMAIL_HOST_USER = 'op0912036@126.com'  # 发送邮件的邮箱
+EMAIL_HOST_PASSWORD = '6190543y'    # 邮箱的授权码（不是登陆密码）
+EMAIL_FROM = '天天生鲜<op0912036@126.com>'

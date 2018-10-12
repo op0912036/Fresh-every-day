@@ -3,7 +3,10 @@ from django.contrib import admin
 from user import views
 
 urlpatterns = [
+    # 注册
     url(r'^register$', views.RegisterView.as_view(), name='register'),
-
-    url(r'^login$', views.login, name='login'),
+    # 用户激活
+    url(r'^active/(?P<token>.*)$', views.ActiveView.as_view(), name='active'),
+    # 登录
+    url(r'^login$', views.LoginView.as_view(), name='login'),
 ]
