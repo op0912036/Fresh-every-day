@@ -103,6 +103,9 @@ USE_L10N = True
 
 USE_TZ = True
 
+# 设置字体
+FONT_STYLE = '/usr/share/fonts/truetype/freefont/FreeMono.ttf'
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
@@ -124,9 +127,9 @@ SESSION_REDIS_PREFIX = 'session'
 AUTH_USER_MODEL = 'user.User'
 
 # 配置发送邮件
-EMAIL_BACKEND  = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.126.com'    # SMTP服务器
-EMAIL_POST = 25     # 端口号
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.126.com'  # SMTP服务器
+EMAIL_POST = 25  # 端口号
 EMAIL_HOST_USER = 'op0912036@126.com'  # 发送邮件的邮箱
-EMAIL_HOST_PASSWORD = '6190543y'    # 邮箱的授权码（不是登陆密码）
+EMAIL_HOST_PASSWORD = '6190543y'  # 邮箱的授权码（不是登陆密码）
 EMAIL_FROM = '天天生鲜<op0912036@126.com>'
