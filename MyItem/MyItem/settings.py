@@ -131,3 +131,6 @@ EMAIL_POST = 25  # 端口号
 EMAIL_HOST_USER = 'op0912036@126.com'  # 发送邮件的邮箱
 EMAIL_HOST_PASSWORD = '6190543y'  # 邮箱的授权码（不是登陆密码）
 EMAIL_FROM = '天天生鲜<op0912036@126.com>'
+
+# 配置登录url
+LOGIN_URL = '/user/login'
