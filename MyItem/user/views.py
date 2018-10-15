@@ -6,7 +6,9 @@ from user.models import *
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, SignatureExpired, BadSignature
 from MyItem import settings
 from django.http import HttpResponse
-from django.core.mail import send_mail
+from celery_tasks.tasks import task_send_mail
+from django.contrib.auth import authenticate, login
+from utils.user_util import *
 
 from PIL import Image, ImageDraw, ImageFont
 import random
@@ -74,7 +76,7 @@ class RegisterView(View):
         html_message = '<h1>%s,欢迎您成为天天生鲜注册会员</h1>请点击下面的链接激活您的账户<br/><a = href="%s">%s</a>' % (
             username, encryption_url, encryption_url)
 
-        send_mail(subject, message, sender, receiver, html_message=html_message)  # 发送
+        task_send_mail.delay(subject, message, sender, receiver, html_message)  # 发送
 
         # 返回应答，跳转到登录页面
         return redirect(reverse('user:login'))
@@ -106,8 +108,136 @@ class ActiveView(View):
 
 
 class LoginView(View):
+    '''登录'''
+
     def get(self, request):
-        return render(request, 'login.html')
+        '''显示登录页面'''
+        # 判断是否记住了用户名
+        if 'username' in request.COOKIES:
+            username = request.COOKIES.get('username')
+            checked = 'checked'
+        else:
+            username = ''
+            checked = ''
+
+        # 使用模板
+        return render(request, 'login.html', {'username': username, 'checked': checked})
 
     def post(self, request):
-        return render(request, 'login.html')
+        '''登录校验'''
+        # 接收数据
+        username = request.POST.get('username')
+        password = request.POST.get('pwd')
+        validate = request.POST.get('validate')
+
+        print(validate)
+
+        # 校验数据
+        if not all([username, password, validate]):
+            return render(request, 'login.html', {'errmsg': '数据不完整'})
+
+        # 业务处理：用户登录
+        user = authenticate(username=username, password=password)
+
+        if user is not None:
+            # 校验验证码
+            ret = request.session.get('validate_code', '').lower()
+            print(ret)
+            if validate.lower() == ret:
+                # 用户名密码正确
+                if user.is_active:
+                    # 用户已激活，记录用户的登录状态
+                    login(request, user)
+
+                    next_url = request.GET.get('next')
+                    if next_url:
+                        # 跳转到登录前的页面
+                        response = redirect(next_url)
+                    else:
+                        # 跳转到首页
+                        response = redirect(reverse('goods:index'))
+
+                    # 判断是否需要记住用户名
+                    remember = request.POST.get('remember')
+
+                    if remember == 'on':
+                        # 记住用户名
+                        response.set_cookie('username', username, max_age=7 * 24 * 3600)
+                    else:
+                        response.delete_cookie('username')
+
+                    # 返回response
+                    return response
+                else:
+                    # 用户未激活
+                    return render(request, 'login.html', {'errmsg': '账户未激活'})
+            else:
+                # 验证码错误
+                return render(request, 'login.html', {'errmsg': '验证码错误'})
+        else:
+            # 用户名或密码错误
+            return render(request, 'login.html', {'errmsg': '用户名或密码错误'})
+
+
+def validate_code(request):
+    # 定义变量，用于画面的背景色、宽、高
+    bgcolor = (random.randrange(20, 100), random.randrange(20, 100), 255)
+    width = 100
+    height = 25
+    # 创建画面对象
+    im = Image.new('RGB', (width, height), bgcolor)
+    # 创建画笔对象
+    draw = ImageDraw.Draw(im)
+    # 调用画笔的point()函数绘制噪点
+    for i in range(0, 100):
+        xy = (random.randrange(0, width), random.randrange(0, height))
+        fill = (random.randrange(0, 255), 255, random.randrange(0, 255))
+        draw.point(xy, fill=fill)
+    # 定义验证码的备选值
+    str1 = 'ABCD123EFGHIJK456LMNOPQRS789TUVWXYZ0'
+    # 随机选取4个值作为验证码
+    rand_str = ''
+    for i in range(0, 4):
+        rand_str += str1[random.randrange(0, len(str1))]
+
+    # 构造字体对象
+    font = ImageFont.truetype(settings.FONT_STYLE, 23)
+    # 构造字体颜色
+    fontcolor = (255, random.randrange(0, 255), random.randrange(0, 255))
+    # 绘制4个字
+    for i in range(4):
+        draw.text((5 + i * 25, 2), rand_str[i], font=font, fill=fontcolor)
+    # 释放画笔
+    del draw
+    # 存入session，用于做进一步验证
+    request.session['validate_code'] = rand_str
+    # 内存文件操作
+    buf = BytesIO()
+    # 将图片保存在内存中，文件类型为png
+    im.save(buf, 'png')
+    # 将内存中的图片数据返回给客户端，MIME类型为图片png
+    return HttpResponse(buf.getvalue(), 'images/png')
+
+
+class UserInfoView(LoginRequiredMixin, View):
+    '''用户中心-信息页'''
+
+    def get(self, request):
+        context = {'page': '1'}
+        return render(request, 'user_center_info.html', context)
+
+
+class UserOrderView(LoginRequiredMixin, View):
+    '''用户中心-订单页'''
+
+    def get(self, request):
+        context = {'page': '2'}
+        return render(request, 'user_center_order.html', context)
+
+
+class UserAddressView(LoginRequiredMixin, View):
+    '''用户中心-地址页'''
+
+    def get(self, request):
+        context = {'page': '3'}
+        return render(request, 'user_center_site.html', context)
