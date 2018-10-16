@@ -25,12 +25,12 @@
 
                         <div class="user_error">{{ errmsg }}</div>
 
-                        <input type="text" name="username" class="name_input" placeholder="请输入用户名">
+                        <input type="text" name="username" class="name_input" value="{{ username }}" placeholder="请输入用户名">
                         <input type="password" name="pwd" class="pass_input" placeholder="请输入密码">
                         <input type="text" name="validate" class="validate_input" placeholder="请输入验证码">
                         <img id="validate_code_img" class='verify_img' src="{% url 'user:validate_code' %}" alt="CheckCode"/>
                         <div class="more_input clearfix">
-                            <input type="checkbox" name="" checked="checked">
+                            <input type="checkbox" name="remember" checked="checked">
                             <label>记住用户名</label>
                             <a href="#">忘记密码</a>
                         </div>
