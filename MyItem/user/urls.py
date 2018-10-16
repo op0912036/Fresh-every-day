@@ -11,6 +11,8 @@ urlpatterns = [
     url(r'^login$', views.LoginView.as_view(), name='login'),
     # 验证码
     url(r'^validate_code$', views.validate_code, name='validate_code'),
+    # 异步验证用户名是否存在
+    url(r'^checkusername$', views.checkusername, name='checkusername'),
 
     # 用户中心-信息页
     url(r'^$', views.UserInfoView.as_view(), name='user'),

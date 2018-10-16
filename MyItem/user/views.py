@@ -14,6 +14,7 @@ from PIL import Image, ImageDraw, ImageFont
 import random
 from django.conf import settings
 from io import BytesIO
+import time
 
 
 class RegisterView(View):
@@ -217,6 +218,16 @@ def validate_code(request):
     im.save(buf, 'png')
     # 将内存中的图片数据返回给客户端，MIME类型为图片png
     return HttpResponse(buf.getvalue(), 'images/png')
+
+
+def checkusername(request):
+    user_name = request.GET.get('user_name')
+    if user_name == '':
+        return HttpResponse(-1)
+    elif User.objects.filter(username=user_name).exists():
+        return HttpResponse(1)
+    else:
+        return HttpResponse(0)
 
 
 class UserInfoView(LoginRequiredMixin, View):

@@ -42,13 +42,13 @@ $(function(){
 		var len = $('#user_name').val().length;
 		if(len<5||len>20)
 		{
-			$('#user_name').next().html('请输入5-20个字符的用户名')
-			$('#user_name').next().show();
+			$('#user_name_err').next().html('请输入5-20个字符的用户名');
+			$('#user_name_err').next().show();
 			error_name = true;
 		}
 		else
 		{
-			$('#user_name').next().hide();
+			$('#user_name_err').next().hide();
 			error_name = false;
 		}
 	}
