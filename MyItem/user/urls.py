@@ -9,6 +9,8 @@ urlpatterns = [
     url(r'^active/(?P<token>.*)$', views.ActiveView.as_view(), name='active'),
     # 登录
     url(r'^login$', views.LoginView.as_view(), name='login'),
+    # 登出
+    url(r'^logout$', views.LogoutView.as_view(), name='logout'),
     # 验证码
     url(r'^validate_code$', views.validate_code, name='validate_code'),
     # 异步验证用户名是否存在

@@ -7,14 +7,13 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, Signatur
 from MyItem import settings
 from django.http import HttpResponse
 from celery_tasks.tasks import task_send_mail
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from utils.user_util import *
 
 from PIL import Image, ImageDraw, ImageFont
 import random
 from django.conf import settings
 from io import BytesIO
-import time
 
 
 class RegisterView(View):
@@ -178,6 +177,17 @@ class LoginView(View):
         else:
             # 用户名或密码错误
             return render(request, 'login.html', {'errmsg': '用户名或密码错误'})
+
+
+class LogoutView(View):
+    '''退出登录'''
+
+    def get(self, request):
+        '''退出登录'''
+        # 清除用户的session信息
+        logout(request)
+        # 跳转到首页
+        return redirect(reverse('goods:index'))
 
 
 def validate_code(request):
