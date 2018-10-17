@@ -17,7 +17,12 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 urlpatterns = [
+    # 后台管理
     url(r'^admin/', include(admin.site.urls)),
+    # 用户模块
     url(r'^user/', include('user.urls', namespace='user')),
+    # 商品模块
     url(r'^', include('goods.urls', namespace='goods')),
+    # tinymce
+    url(r'^tinymce/', include('tinymce.urls')),
 ]

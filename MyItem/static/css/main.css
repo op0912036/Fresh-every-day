@@ -1134,7 +1134,7 @@ html, body {
     height: 30px;
     line-height: 30px;
     display: inline-block;
-    color: #5088CF;
+    color: g;
 }
 
 .reg_form li {
@@ -1872,7 +1872,17 @@ html, body {
 }
 
 .site_con .form_group2 {
+    font-size: 14px;
+    height: 40px;
+    line-height: 40px;
+}
+
+.site_con .form_group3 {
     height: 90px;
+}
+
+.check{
+    height: 25px;
 }
 
 .site_area {

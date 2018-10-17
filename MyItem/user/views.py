@@ -1,11 +1,11 @@
 import re
-from django.shortcuts import render, redirect
+from django.shortcuts import *
 from django.core.urlresolvers import reverse
 from django.views.generic import View
 from user.models import *
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, SignatureExpired, BadSignature
 from MyItem import settings
-from django.http import HttpResponse
+from django.http import *
 from celery_tasks.tasks import task_send_mail
 from django.contrib.auth import authenticate, login, logout
 from utils.user_util import *
@@ -14,6 +14,7 @@ from PIL import Image, ImageDraw, ImageFont
 import random
 from django.conf import settings
 from io import BytesIO
+from django.core import serializers
 
 
 class RegisterView(View):
@@ -296,12 +297,34 @@ class UserAddressView(LoginRequiredMixin, View):
 
         # 接收数据
         receiver = request.POST.get('receiver')
+        province_id = request.POST.get('province_id')
+        city_id = request.POST.get('city_id')
+        town_id = request.POST.get('town_id')
         addr = request.POST.get('addr')
         zip_code = request.POST.get('zip_code')
         phone = request.POST.get('phone')
 
+        # 查找地址信息
+        if province_id == '0':
+            province = ''
+        else:
+            province = Province.objects.filter(pk=province_id)[0].name
+
+        if city_id == '0':
+            city = ''
+        else:
+            city = City.objects.filter(pk=city_id)[0].name
+
+        if town_id == '0':
+            town = ''
+        else:
+            town = Town.objects.filter(pk=town_id)[0].name
+
+        # 拼接地址
+        addr_all = province + city + town + addr
+
         # 校验数据
-        if not all([receiver, addr, phone]):
+        if not all([receiver, addr_all, phone, ]):
             context['errmsg'] = '数据不完整'
             return render(request, 'user_center_site.html', context)
 
@@ -319,9 +342,47 @@ class UserAddressView(LoginRequiredMixin, View):
         address.is_default = False
 
         # 添加地址
-        Address.objects.create(user=user, receiver=receiver, addr=addr, zip_code=zip_code, phone=phone, is_default=True)
+        Address.objects.create(
+            user=user,
+            receiver=receiver,
+            addr=addr_all,
+            zip_code=zip_code,
+            phone=phone,
+            is_default=True
+        )
 
         address.save()
 
         # 返回应答，刷新地址页面
         return redirect(reverse('user:address'))
+
+
+# 获取所有的省份，转成json格式
+def get_all_province(request):
+    province_list = Province.objects.all()
+    content = {
+        'province_list': serializers.serialize('json', province_list)
+    }
+    return JsonResponse(content)
+
+
+# 根据省份的code获取城市
+def get_city_by_province_code(request):
+    province_id = request.GET.get('province_id')
+    province_code = Province.objects.filter(pk=province_id)[0].code
+    city_list = City.objects.filter(province_code=province_code)
+    content = {
+        'city_list': serializers.serialize('json', city_list)
+    }
+    return JsonResponse(content)
+
+
+# 根据城市的code获取区县
+def get_town_by_city_code(request):
+    city_id = request.GET.get('city_id')
+    city_code = City.objects.filter(pk=city_id)[0].code
+    town_list = Town.objects.filter(city_code=city_code)
+    content = {
+        'town_list': serializers.serialize('json', town_list)
+    }
+    return JsonResponse(content)

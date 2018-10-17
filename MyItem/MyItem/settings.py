@@ -36,6 +36,7 @@ INSTALLED_APPS = (
 
     'user',
     'goods',
+    'tinymce',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -134,6 +135,12 @@ EMAIL_FROM = '天天生鲜<op0912036@126.com>'
 
 # 配置登录url
 LOGIN_URL = '/user/login'
+
+TINYMCE_DEFAULT_CONFIG = {
+    'theme': 'advanced',
+    'width': 600,
+    'height': 400,
+}
 
 # 上传文件存储的路径
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/media')
