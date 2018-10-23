@@ -241,7 +241,7 @@ html, body {
 }
 
 .subnav li .fruit {
-    background: url(../images/icons.png) 28px 0px no-repeat;
+    background: url(../images/icons.png) 28px 0 no-repeat;
 }
 
 .subnav li .seafood {

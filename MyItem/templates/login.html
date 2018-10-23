@@ -48,8 +48,7 @@
         var validate_code_img=document.getElementById('validate_code_img');
         validate_code_img.onclick = function () {
             var url = '/user/validate_code?num=';
-            var num = new Date().getTime();
-            url+=num;
+            url+=new Date().getTime();
             validate_code_img.src = url
         }
     </script>
