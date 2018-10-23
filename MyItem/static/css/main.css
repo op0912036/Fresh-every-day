@@ -772,6 +772,15 @@ html, body {
     border-bottom: 0px
 }
 
+.specification{
+    width: 25px;
+    line-height: 25px;
+    text-align: center;
+    border: 1px solid #ddd;
+    color: #666;
+    font-size: 15px
+}
+
 .total {
     height: 35px;
     line-height: 35px;
