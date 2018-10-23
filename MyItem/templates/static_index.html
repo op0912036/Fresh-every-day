@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'static_base.html' %}
 {% load staticfiles %}
 {% block title %}天天生鲜-首页{% endblock title %}
 {% block topfiles %}
@@ -23,7 +23,7 @@
     <div class="center_con clearfix">
         <ul class="subnav fl">
             {% for type in types %}
-                <li><a href="#model0{{ forloop.counter }}" class="{{ type.lego }}">{{ type.name }}</a></li>
+                <li><a href="#model0{{ forloop.counter }}" class="{{ type.logo }}">{{ type.name }}</a></li>
             {% endfor %}
         </ul>
         <div class="slide fl">
@@ -63,7 +63,7 @@
                         <li>
                             <h4><a href="#">{{ banner.sku.name }}</a></h4>
                             <a href="#"><img src="{{ banner.sku.image.url }}"></a>
-                            <div class="price">{{ banner.sku.price }}</div>
+                            <div class="prize">¥ {{ banner.sku.price }}/{{ banner.sku.unite }}</div>
                         </li>
                     {% endfor %}
                 </ul>
@@ -77,7 +77,6 @@
     <script type="text/javascript">
         var oFruit = document.getElementById('fruit_more');
         var oShownum = document.getElementById('show_count');
-
         var hasorder = localStorage.getItem('order_finish');
 
         if (hasorder) {
