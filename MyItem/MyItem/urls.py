@@ -25,4 +25,6 @@ urlpatterns = [
     url(r'^', include('goods.urls', namespace='goods')),
     # tinymce
     url(r'^tinymce/', include('tinymce.urls')),
+    # haystack
+    url(r'^search/', include('haystack.urls')),
 ]

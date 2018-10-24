@@ -22,13 +22,13 @@
                     {% if goodskus == '' %}
                         <li><p>暂无最近浏览记录</p></li>
                     {% else %}
-                        {% for i in goodskus %}
+                        {% for sku in goods_li %}
                             <li>
-                                <a href="{% url 'goods:detail' i.id %}"><img src="{{ i.image.url }}"></a>
-                                <h4><a href="detail.html">{{ i.name }}</a></h4>
+                                <a href="{% url 'goods:detail' sku.id %}"><img src="{{ sku.image.url }}"></a>
+                                <h4><a href="detail.html">{{ sku.name }}</a></h4>
                                 <div class="operate">
-                                    <span class="prize">￥{{ i.price }}</span>
-                                    <span class="unit">{{ i.price }}/{{ i.unite }}</span>
+                                    <span class="prize">￥{{ sku.price }}</span>
+                                    <span class="unit">{{ sku.price }}/{{ sku.unite }}</span>
                                     <a href="#" class="add_goods" title="加入购物车"></a>
                                 </div>
                             </li>
