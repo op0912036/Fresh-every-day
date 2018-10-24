@@ -3,6 +3,7 @@ from django.views.generic import View
 from goods.models import *
 from django.core.cache import cache
 from django.core.urlresolvers import reverse
+from redis import StrictRedis
 
 
 # Register your models here.
@@ -68,6 +69,22 @@ class DetailView(View):
 
         # 获取同一个SPU的其他规格商品
         same_spu_skus = GoodsSKU.objects.filter(goods=sku.goods)
+
+        # 如果用户已经登录
+        user = request.user
+        if user.is_authenticated():
+            # 添加用户的历史记录
+
+            # 链接redis
+            conn = StrictRedis('192.168.12.193')
+            # key
+            history_key = 'history_%d' % user.id
+            # 移除列表中的goods_id
+            conn.lrem(history_key, 0, goods_id)
+            # 把goods_id插入到列表的左侧
+            conn.lpush(history_key, goods_id)
+            # 只保存用户最新浏览的5条信息
+            conn.ltrim(history_key, 0, 4)
 
         # 获取用户购物车中商品的数目
         cart_count = 0

@@ -9,6 +9,8 @@ from django.http import *
 from celery_tasks.tasks import task_send_mail
 from django.contrib.auth import authenticate, login, logout
 from utils.user_util import *
+from redis import StrictRedis
+from goods.models import *
 
 from PIL import Image, ImageDraw, ImageFont
 import random
@@ -251,7 +253,16 @@ class UserInfoView(LoginRequiredMixin, View):
             # 不存在默认收货地址
             address = None
 
-        context = {'page': '1', 'address': address}
+        # 读取历史记录
+        # 连接redis
+        conn = StrictRedis('192.168.12.193')
+        history = conn.lrange('history_%d' % user.id, 0, -1)
+        print(history)
+
+        goodskus = GoodsSKU.objects.filter(id__in=history)
+        print(goodskus)
+
+        context = {'page': '1', 'address': address, 'goodskus': goodskus}
         return render(request, 'user_center_info.html', context)
 
 
