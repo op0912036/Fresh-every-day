@@ -5,6 +5,7 @@ from django.core.cache import cache
 from django.core.urlresolvers import reverse
 from redis import StrictRedis
 from django.core.paginator import Paginator
+from django.conf import settings
 
 
 # Register your models here.
@@ -77,7 +78,7 @@ class DetailView(View):
             # 添加用户的历史记录
 
             # 链接redis
-            conn = StrictRedis('192.168.12.193')
+            conn = settings.REDIS_CONN
             # key
             history_key = 'history_%d' % user.id
             # 移除列表中的goods_id

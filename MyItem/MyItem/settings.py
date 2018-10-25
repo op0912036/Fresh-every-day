@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'goods',
     'tinymce',
     'haystack',
+    'cart',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -114,6 +115,11 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
+
+# 配置连接redis的对象
+from redis import StrictRedis
+
+REDIS_CONN = StrictRedis('192.168.12.193')
 
 # session交给redis管理
 SESSION_ENGINE = 'redis_sessions.session'

@@ -256,7 +256,7 @@ class UserInfoView(LoginRequiredMixin, View):
         # 读取历史记录
 
         # 连接redis
-        conn = StrictRedis('192.168.12.193')
+        conn = settings.REDIS_CONN
         sku_ids = conn.lrange('history_%d' % user.id, 0, -1)
 
         goods_li = [GoodsSKU.objects.get(id=id) for id in sku_ids]
