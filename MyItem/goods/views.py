@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 from redis import StrictRedis
 from django.core.paginator import Paginator
 from django.conf import settings
+from cart.views import *
 
 
 # Register your models here.
@@ -41,8 +42,8 @@ class IndexView(View):
 
             cache.set('cache_index', context, 3600)
 
-        # 获取用户购物车中商品的数目，暂时设置为0,待完善
-        cart_count = 0
+        # 获取用户购物车中商品的数目
+        cart_count = get_cart_count(request.user)
 
         context.update(cart_count=cart_count)
 
@@ -89,7 +90,7 @@ class DetailView(View):
             conn.ltrim(history_key, 0, 4)
 
         # 获取用户购物车中商品的数目
-        cart_count = 0
+        cart_count = get_cart_count(request.user)
 
         # 组织模板上下文
         context = {
@@ -172,7 +173,7 @@ class ListView(View):
         new_skus = GoodsSKU.objects.filter(type=type).order_by('-create_time')[:2]
 
         # 获取用户购物车中商品的数目
-        cart_count = 0
+        cart_count = get_cart_count(request.user)
 
         # 组织模板上下文
         context = {
