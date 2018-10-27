@@ -30,7 +30,7 @@ class OrderInfo(BaseModel):
 
     transit_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='订单运费')
     order_status = models.SmallIntegerField(choices=ORDER_STATUS_CHOICES, default=1, verbose_name='订单状态')
-    trade_no = models.CharField(max_length=128, default='', verbose_name='支付编号')
+    trade_no = models.CharField(max_length=128, default=' ', verbose_name='支付编号')
 
     class Meta:
         db_table = 'fed_order_info'

@@ -274,15 +274,12 @@ class UserOrderView(LoginRequiredMixin, View):
         '''显示'''
         # 获取用户的订单信息
         user = request.user
-        print(user)
         orders = OrderInfo.objects.filter(user=user).order_by('-create_time')
-        print(orders)
 
         # 遍历获取订单商品的信息
         for order in orders:
             # 根据order_id查询订单商品信息
             order_skus = OrderGoods.objects.filter(order_id=order.order_id)
-            print(order_skus)
 
             # 遍历order_skus计算商品的小计
             for order_sku in order_skus:
@@ -295,7 +292,7 @@ class UserOrderView(LoginRequiredMixin, View):
             order.order_skus = order_skus
 
         # 分页
-        paginator = Paginator(orders, 1)
+        paginator = Paginator(orders, 2)
 
         # 获取第page页的内容
         try:
@@ -329,7 +326,6 @@ class UserOrderView(LoginRequiredMixin, View):
             'order_page': order_page,
             'pages': pages,
             'page': 2,
-            'orders':orders,
         }
 
         # 使用模板
