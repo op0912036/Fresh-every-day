@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$USER_HOME$/MyDjangoProject/.idea/MyDjangoProject.iml" filepath="$USER_HOME$/MyDjangoProject/.idea/MyDjangoProject.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/MyItem.iml" filepath="$PROJECT_DIR$/.idea/MyItem.iml" />
+      <module fileurl="file://$USER_HOME$/My_Management/.idea/My_Management.iml" filepath="$USER_HOME$/My_Management/.idea/My_Management.iml" />
     </modules>
   </component>
 </project>
